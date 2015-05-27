@@ -82,7 +82,7 @@ public class MainCorfuTransformer {
 						addPropertyValue(model, company, propertyUri, objectValue, lang);
 					}
 					addPropertyValue(model, company, DCTerms.date.toString(), dateFormat.format(cal.getTime()).toString(), null);
-					//addPropertyValue(model, company, DCTerms.creator.toString(), dateFormat.format(cal.getTime()).toString(), null);
+					addPropertyValue(model, company, DCTerms.source.toString(), transformation.getConfig().getProvider(), null);
 				}
 				
 			}
