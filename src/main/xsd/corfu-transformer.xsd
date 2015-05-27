@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+        xmlns="http://purl.org/weso/corfu"
+        xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+        targetNamespace="http://purl.org/weso/corfu" 
+        xmlns:tns="http://purl.org/weso/corfu" 
+        elementFormDefault="qualified"
+        >
+
+ <xs:element name="corfuTransformer">
+  <xs:complexType>
+   <xs:sequence>
+    <xs:element name="config" minOccurs="1" maxOccurs="1" type="typeConfig"/>
+    <xs:element name="mapping" minOccurs="0" maxOccurs="unbounded" type="typeMapping"/>
+   </xs:sequence>
+   </xs:complexType>
+ </xs:element>
+
+<!-- To generate the parent resource -->
+ <xs:complexType name="typeConfig">
+  <xs:sequence>
+   <xs:element name="inputPath" type="xs:string" />
+   <xs:element name="outputPath" type="xs:string" />
+   <xs:element name="inputFormat" type="rdfFormat" />
+   <xs:element name="outputFormat" type="rdfFormat" />
+   <xs:element name="sparqlEndpoint" type="xs:string" />
+   <xs:element name="baseURI" type="xs:anyURI" />
+   <xs:element name="rdfType" type="xs:anyURI" />
+   <xs:element name="namedGraph" type="xs:anyURI" />
+   <!-- Mapping for the id mandatory -->
+   <xs:element name="id" minOccurs="1" maxOccurs="1" type="typeMapping"/>
+   <xs:element name="autogenerate" minOccurs="1" maxOccurs="1" type="typeAutogenerate"/>
+   <xs:element name="header" minOccurs="1" maxOccurs="1" type="xs:boolean"/>
+   <xs:element name="separator" minOccurs="1" maxOccurs="1" type="xs:string"/>
+  </xs:sequence>
+ </xs:complexType>
+ 
+  <!-- For any column in the input a mapping should be made -->
+ <xs:complexType name="typeAutogenerate">
+  <xs:sequence>
+   <xs:element name="starts" type="xs:integer" />
+  </xs:sequence>
+ </xs:complexType>
+ 
+ <!-- For any column in the input a mapping should be made -->
+ <xs:complexType name="typeMapping">
+  <xs:sequence>
+   <xs:element name="column" type="typeCol" />
+   <xs:element name="generates" type="typeResource" />
+   <xs:element name="lang" minOccurs="0"  maxOccurs="1" type="xs:string" />
+   <xs:element name="propertyUri" type="xs:anyURI" />
+  </xs:sequence>
+ </xs:complexType>
+
+
+ <xs:simpleType name="typeCol">
+ <!-- Columns in Excel: a letter or two letters -->
+ <xs:restriction base="xs:string">
+    <xs:pattern value="[A-Z]|[A-Z][A-Z]" />
+  </xs:restriction>
+ </xs:simpleType>
+
+ <xs:simpleType name="typeResource">
+  <xs:restriction base="xs:string">
+    <xs:enumeration value="Resource"  />
+    <xs:enumeration value="Literal"  />
+    <xs:enumeration value="LiteralLang"  />
+  </xs:restriction>
+ </xs:simpleType>
+
+ <xs:simpleType name="rdfFormat">
+  <xs:restriction base="xs:string">
+    <xs:enumeration value="TURTLE"  />
+    <xs:enumeration value="RDF/XML"  />
+    <xs:enumeration value="N-Triples"  />
+    <xs:enumeration value="JSON-LD"  />
+    <xs:enumeration value="RDF/JSON"  />
+  </xs:restriction>
+ </xs:simpleType>
+
+ 
+</xs:schema>
