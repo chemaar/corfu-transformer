@@ -239,15 +239,16 @@
                                 <executions>
                                 <execution>
                                         <goals>
-                                        <goal>xjc</goal>
+                                        	<goal>xjc</goal>
                                         </goals>
                                 </execution>
                                 </executions>
                         <configuration>
-                                <packageName>org.weso.corfu.generated</packageName> <!-- The name of your generated source package -->  
+                                <packageName>org.weso.corfu.generated</packageName> <!-- The name of your generated source package -->
+                                <schemaFiles>src/main/xsd/corfu-transformer.xsd</schemaFiles>  
                                 <extension>true</extension>
                                 <verbose>true</verbose>
-                        <strict>true</strict>                                                                   
+                       			 <strict>true</strict>                                                                   
                         </configuration>
                         </plugin>
                         

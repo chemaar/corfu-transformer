@@ -1,4 +1,4 @@
-package corfu;
+package utils;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -10,6 +10,8 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.weso.corfu.generated.CorfuTransformer;
+
+import exceptions.CorfuModelException;
 
 
 public class CORFUTransformerXMLBind {

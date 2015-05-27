@@ -19,17 +19,19 @@
 <!-- To generate the parent resource -->
  <xs:complexType name="typeConfig">
   <xs:sequence>
+   <xs:element name="provider" type="xs:string" />
    <xs:element name="inputPath" type="xs:string" />
    <xs:element name="outputPath" type="xs:string" />
    <xs:element name="inputFormat" type="rdfFormat" />
    <xs:element name="outputFormat" type="rdfFormat" />
+   <xs:element name="outputName" type="xs:string" />
    <xs:element name="sparqlEndpoint" type="xs:string" />
    <xs:element name="baseURI" type="xs:anyURI" />
    <xs:element name="rdfType" type="xs:anyURI" />
    <xs:element name="namedGraph" type="xs:anyURI" />
    <!-- Mapping for the id mandatory -->
    <xs:element name="id" minOccurs="1" maxOccurs="1" type="typeMapping"/>
-   <xs:element name="autogenerate" minOccurs="1" maxOccurs="1" type="typeAutogenerate"/>
+   <xs:element name="autogenerate" minOccurs="0" maxOccurs="1" type="typeAutogenerate"/>
    <xs:element name="header" minOccurs="1" maxOccurs="1" type="xs:boolean"/>
    <xs:element name="separator" minOccurs="1" maxOccurs="1" type="xs:string"/>
   </xs:sequence>
@@ -45,7 +47,7 @@
  <!-- For any column in the input a mapping should be made -->
  <xs:complexType name="typeMapping">
   <xs:sequence>
-   <xs:element name="column" type="typeCol" />
+   <xs:element name="column" type="xs:integer" />
    <xs:element name="generates" type="typeResource" />
    <xs:element name="lang" minOccurs="0"  maxOccurs="1" type="xs:string" />
    <xs:element name="propertyUri" type="xs:anyURI" />
@@ -75,6 +77,7 @@
     <xs:enumeration value="N-Triples"  />
     <xs:enumeration value="JSON-LD"  />
     <xs:enumeration value="RDF/JSON"  />
+    <xs:enumeration value="CSV"  />
   </xs:restriction>
  </xs:simpleType>
 

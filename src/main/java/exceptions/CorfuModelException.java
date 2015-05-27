@@ -1,4 +1,4 @@
-package corfu;
+package exceptions;
 
 import javax.xml.bind.JAXBException;
 
