@@ -27,6 +27,8 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.DCTerms;
+import com.hp.hpl.jena.vocabulary.RDF;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 import exceptions.DocumentBuilderException;
 
@@ -70,7 +72,7 @@ public class MainCorfuTransformer {
 					headerProcessed = Boolean.TRUE;
 				
 				}else{
-					company = createCompany(transformation,model,row);
+					company = createCompany(transformation,model,row,transformation.getConfig().getRdfType());
 					logger.info("Creating company: "+company.getURI());
 					for(TypeMapping mapping:mappings){
 						column = mapping.getColumn().intValue();
@@ -99,7 +101,8 @@ public class MainCorfuTransformer {
 	private static Resource createCompany(
 			CorfuTransformer transformation,
 			Model model,
-			String []row) {
+			String []row,
+			String type) {
 		String id = MainCorfuTransformer.Empty;
 		//if(transformation.getConfig().getAutogenerate()!=null){
 			//Make something
@@ -111,6 +114,11 @@ public class MainCorfuTransformer {
 		String uri = transformation.getConfig().getBaseURI();
 		Resource companyResource = model.createResource(uri+id);
 		addPropertyValue(model, companyResource, transformation.getConfig().getId().getPropertyUri(), id, null);
+		Resource typeResource = model.getResource(type);
+		if(typeResource==null){
+			typeResource = model.createResource(type);
+		}
+		companyResource.addProperty(RDF.type, typeResource);
 		return companyResource;
 	}
 	
