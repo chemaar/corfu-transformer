@@ -2,6 +2,7 @@ package corfu;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -35,6 +36,7 @@ import exceptions.DocumentBuilderException;
 public class MainCorfuTransformer {
 	protected static Logger logger = Logger.getLogger(MainCorfuTransformer.class);
 	public static final String Empty = "";
+	private static final long MAX_TRIPLES = 100;
 	
 	public static void main(String []args) throws DocumentBuilderException, IOException{
 		
@@ -42,7 +44,7 @@ public class MainCorfuTransformer {
 		Calendar cal = Calendar.getInstance();
 		
 		
-		String xmlFile = "naive/naive-provider.xml";
+		String xmlFile = "naive/crotrail-provider.xml";
 		Node node = DocumentBuilderHelper.
 				getDocumentFromInputStream(
 						Thread.currentThread().getContextClassLoader().
@@ -55,6 +57,8 @@ public class MainCorfuTransformer {
 		if( in != null){
 			logger.info("Processing file "+transformation.getConfig().getInputPath());
 			Model model = ModelFactory.createDefaultModel();
+			//model.removeAll();
+			//model = null;
 			Reader inputDataReader = new InputStreamReader(in);
 			CSVReader reader = new CSVReader(inputDataReader, transformation.getConfig().getSeparator().charAt(0));
 			String[] row = null;
@@ -66,6 +70,7 @@ public class MainCorfuTransformer {
 			String propertyUri  = MainCorfuTransformer.Empty;
 			boolean headerProcessed = Boolean.FALSE;
 			boolean hasHeader = transformation.getConfig().isHeader();
+			int serial = 0;
 			while((row = reader.readNext()) != null) {
 				//Read and apply mappings
 				if(hasHeader && !headerProcessed){
@@ -86,18 +91,45 @@ public class MainCorfuTransformer {
 					addPropertyValue(model, company, DCTerms.date.toString(), dateFormat.format(cal.getTime()).toString(), null);
 					addPropertyValue(model, company, DCTerms.source.toString(), transformation.getConfig().getProvider(), null);
 				}
-				
+				//Serializar cuando se sobrepase un nº de tripletas 1000000
+				if(model.size() > MAX_TRIPLES){
+					serialize(transformation, model, serial);
+					serial++;
+					model.removeAll();
+					model = null;
+					model = ModelFactory.createDefaultModel();
+				}
 			}
 			reader.close();
 			//Serialize model
-			String outputName = transformation.getConfig().getOutputName();
-			String file =transformation.getConfig().getOutputPath()+outputName;
-			String outputFormat = transformation.getConfig().getOutputFormat().value();
-			String uriBase = transformation.getConfig().getNamedGraph();
-			logger.info("Serializing model to "+file);
-			TransformerHelper.serializeModel(model, PrefixManager.getResourceBundle(), file, outputFormat, uriBase);
+			if(model != null && model.size()>0){
+				serialize(transformation, model, serial);
+			}
+			
 		}
 	}
+
+
+
+	/**
+	 * @param transformation
+	 * @param model
+	 * @param serial
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public static void serialize(CorfuTransformer transformation, Model model,
+			int serial) throws FileNotFoundException, IOException {
+		String outputName = transformation.getConfig().getOutputName();
+		String file =transformation.getConfig().getOutputPath()+outputName+"_"+serial+".ttl";
+		String outputFormat = transformation.getConfig().getOutputFormat().value();
+		String uriBase = transformation.getConfig().getNamedGraph();
+		logger.info("Serializing model to "+file);
+		TransformerHelper.serializeModel(model, PrefixManager.getResourceBundle(), file, outputFormat, uriBase);
+	}
+	
+	
+	
 	private static Resource createCompany(
 			CorfuTransformer transformation,
 			Model model,

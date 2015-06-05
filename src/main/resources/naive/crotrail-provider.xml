@@ -2,11 +2,11 @@
 <p:corfuTransformer xmlns:p="http://purl.org/weso/corfu" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://purl.org/weso/corfu corfu-transformer.xsd ">
   <p:config>
     <p:provider>Croctrail Project</p:provider>
-    <p:inputPath>G:/repositories/github/corfu-transformer/src/main/resources/data/companies-naive.csv</p:inputPath>
+    <p:inputPath>H:/company_names/croctrail/company_names.csv</p:inputPath>
     <p:outputPath>target/</p:outputPath>
     <p:inputFormat>CSV</p:inputFormat>
     <p:outputFormat>TURTLE</p:outputFormat>
-    <p:outputName>naive-in-rdf.ttl</p:outputName>
+    <p:outputName>companies-in-rdf</p:outputName>
     <p:sparqlEndpoint>http://localhost/sparql</p:sparqlEndpoint>
     <p:baseURI>http://purl.org/weso/corfu/company/</p:baseURI>
     <p:rdfType>http://www.w3.org/ns/org#Organization</p:rdfType>
@@ -23,12 +23,12 @@
     <p:separator>	</p:separator>
   </p:config>
   <p:mapping>
-    <p:column>2</p:column>
+    <p:column>1</p:column>
     <p:generates>Literal</p:generates>
     <p:propertyUri>http://purl.org/dc/terms/identifier</p:propertyUri>
   </p:mapping>
    <p:mapping>
-    <p:column>3</p:column>
+    <p:column>2</p:column>
     <p:generates>Literal</p:generates>
     <p:propertyUri>http://www.w3.org/2004/02/skos/core#prefLabel</p:propertyUri>
   </p:mapping>
